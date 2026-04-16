@@ -48,15 +48,15 @@ export async function initGrassHero(container) {
   camera.position.set(-2.8, 6.5, 17.5);
   camera.lookAt(0.5, 1.2, 0.4);
 
-  // ── Renderer ────────────────────────────────────────
-  const renderer = new THREE.WebGPURenderer({ antialias: true, alpha: false });
+  // ── Renderer (WebGPU with automatic WebGL2 fallback for iOS) ──
+  const renderer = new THREE.WebGPURenderer({ antialias: true });
   const maxDPR = Math.min(devicePixelRatio, 1.5);
   renderer.setPixelRatio(maxDPR);
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
   container.appendChild(renderer.domElement);
-  renderer.domElement.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+  renderer.domElement.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;';
   await renderer.init();
 
   // ── GPU Buffers ─────────────────────────────────────
