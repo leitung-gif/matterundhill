@@ -459,6 +459,7 @@ p {
   display: flex;
   align-items: flex-end;
   padding-bottom: var(--space-2xl);
+  padding-top: 7rem;
   overflow: hidden;
   background: #3d3325;
 }
