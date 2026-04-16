@@ -1255,6 +1255,20 @@ section {
   color: var(--beige-100);
 }
 
+.footer__credit {
+  font-size: 0.8rem;
+  color: var(--text-on-dark-muted);
+}
+
+.footer__credit a {
+  color: var(--green-300);
+  transition: color var(--duration-fast) ease;
+}
+
+.footer__credit a:hover {
+  color: var(--beige-100);
+}
+
 /* === MARQUEE TEXT BAND === */
 .marquee {
   overflow: hidden;
