@@ -44,15 +44,9 @@ export async function initGrassHero(container) {
   scene.fog = new THREE.FogExp2(FOG_HEX, 0.028);
 
   // ── Camera ──────────────────────────────────────────
-  const fov = isMobile ? 55 : 50;
-  const camera = new THREE.PerspectiveCamera(fov, container.clientWidth / container.clientHeight, 0.1, 100);
-  if (isMobile) {
-    camera.position.set(0, 2.5, 10);
-    camera.lookAt(0, 1.5, -8);
-  } else {
-    camera.position.set(-2.8, 6.5, 17.5);
-    camera.lookAt(0.5, 1.2, 0.4);
-  }
+  const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+  camera.position.set(-2.8, 6.5, 17.5);
+  camera.lookAt(0.5, 1.2, 0.4);
 
   // ── Renderer ────────────────────────────────────────
   const renderer = new THREE.WebGPURenderer({ antialias: !isLowEnd, alpha: false });
@@ -267,8 +261,8 @@ export async function initGrassHero(container) {
   renderer.domElement.style.opacity = '1';
 
   // ── Subtle Camera Drift ─────────────────────────────
-  const baseCamPos = isMobile ? { x: 0, y: 2.5, z: 10 } : { x: -2.8, y: 6.5, z: 17.5 };
-  const lookTarget = isMobile ? new THREE.Vector3(0, 1.5, -8) : new THREE.Vector3(0.5, 1.2, 0.4);
+  const baseCamPos = { x: -2.8, y: 6.5, z: 17.5 };
+  const lookTarget = new THREE.Vector3(0.5, 1.2, 0.4);
   const clock = new THREE.Clock();
 
   // ── Animation Loop ──────────────────────────────────
