@@ -176,18 +176,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const stickyCta = document.querySelector('.sticky-cta');
   
   if (stickyCta) {
-    const stickyObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting && window.scrollY > 600) {
+    const heroEl = document.querySelector('.hero');
+    if (heroEl) {
+      const stickyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting && window.scrollY > 600) {
+            stickyCta.classList.add('visible');
+          } else {
+            stickyCta.classList.remove('visible');
+          }
+        });
+      });
+      stickyObserver.observe(heroEl);
+    } else {
+      // No hero on this page — show sticky CTA after short scroll
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 150) {
           stickyCta.classList.add('visible');
         } else {
           stickyCta.classList.remove('visible');
         }
-      });
-    });
-
-    const heroEl = document.querySelector('.hero');
-    if (heroEl) stickyObserver.observe(heroEl);
+      }, { passive: true });
+    }
   }
 
   // === ACTIVE NAV STATE ===
