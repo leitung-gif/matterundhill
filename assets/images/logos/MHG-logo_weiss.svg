@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 837.5 102.4">
+  <!-- Generator: Adobe Illustrator 29.8.3, SVG Export Plug-In . SVG Version: 2.1.1 Build 3)  -->
+  <defs>
+    <style>
+      .st0, .st1, .st2 {
+        stroke: #244721;
+      }
+
+      .st0, .st1, .st3, .st4, .st5, .st6, .st7 {
+        font-family: BodoniSvtyTwoITCTT-Book, 'Bodoni 72';
+        font-size: 92.2px;
+      }
+
+      .st0, .st2, .st8, .st3, .st9, .st6, .st10 {
+        fill: none;
+      }
+
+      .st0, .st3, .st6 {
+        stroke-miterlimit: 2.8;
+        stroke-width: 1.1px;
+      }
+
+      .st1 {
+        fill: #244721;
+      }
+
+      .st2, .st8, .st9, .st10 {
+        stroke-width: 5.7px;
+      }
+
+      .st11 {
+        fill: #efee46;
+      }
+
+      .st11, .st12 {
+        display: none;
+      }
+
+      .st8, .st5 {
+        stroke: #fff;
+      }
+
+      .st3, .st4, .st9 {
+        stroke: #f1f0e1;
+      }
+
+      .st4 {
+        fill: #f1f0e1;
+      }
+
+      .st5 {
+        fill: #fff;
+      }
+
+      .st6, .st7, .st10 {
+        stroke: #2f2b10;
+      }
+
+      .st7 {
+        fill: #2f2b10;
+      }
+    </style>
+  </defs>
+  <rect class="st11" x="-14.8" y="-6" width="854.9" height="111.9"/>
+  <g id="grün" class="st12">
+    <path class="st2" d="M24.2,91.2V13.8M76.8,13.8l-26.3,34.9L24.2,13.8M76.8,91.2V13.8M24.2,91.2V13.8M76.8,91.2V13.8"/>
+    <circle class="st2" cx="50.6" cy="50.8" r="47.2"/>
+    <line class="st2" x1="2.8" y1="50.8" x2="97.4" y2="50.8"/>
+    <text class="st0" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <text class="st1" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+  </g>
+  <g id="hellbeige" class="st12">
+    <text class="st4" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <text class="st3" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <line class="st9" x1="2.8" y1="50.8" x2="97.4" y2="50.8"/>
+    <circle class="st9" cx="50.6" cy="50.8" r="47.2"/>
+    <path class="st9" d="M24.2,91.2V13.8M76.8,13.8l-26.3,34.9L24.2,13.8M76.8,91.2V13.8M24.2,91.2V13.8M76.8,91.2V13.8"/>
+  </g>
+  <g id="weiss">
+    <path class="st8" d="M24.6,91.2V13.8M77.2,13.8l-26.3,34.9L24.6,13.8M77.2,91.2V13.8M24.6,91.2V13.8M77.2,91.2V13.8"/>
+    <circle class="st8" cx="51.1" cy="50.9" r="47.2"/>
+    <line class="st8" x1="3.3" y1="50.9" x2="97.9" y2="50.9"/>
+    <text class="st5" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+  </g>
+  <g id="schwarz" class="st12">
+    <path class="st10" d="M24.6,91.4V13.9M77.1,13.9l-26.3,34.9L24.6,13.9M77.1,91.4V13.9M24.6,91.4V13.9M77.1,91.4V13.9"/>
+    <circle class="st10" cx="51" cy="51" r="47.2"/>
+    <line class="st10" x1="3.2" y1="51" x2="97.8" y2="51"/>
+    <text class="st7" transform="translate(116.6 83.6) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <text class="st6" transform="translate(116.6 83.7) scale(1 1)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+  </g>
+</svg>

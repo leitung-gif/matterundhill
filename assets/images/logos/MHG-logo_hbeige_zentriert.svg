@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_3" data-name="Ebene 3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 721.06 280.7">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke-miterlimit: 2.83;
+        stroke-width: 1.15px;
+      }
+
+      .cls-1, .cls-2 {
+        font-family: BodoniSvtyTwoITCTT-Book, 'Bodoni 72';
+        font-size: 92.17px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke: #f1f0e1;
+      }
+
+      .cls-1, .cls-3 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f1f0e1;
+      }
+
+      .cls-3 {
+        stroke-width: 8.4px;
+      }
+    </style>
+  </defs>
+  <g id="hellbeige">
+    <text class="cls-2" transform="translate(.55 277.46) scale(1 1.02)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <text class="cls-1" transform="translate(.55 277.46) scale(1 1.02)"><tspan x="0" y="0">Matter &amp; Hill Garten</tspan></text>
+    <line class="cls-3" x1="285.01" y1="79.5" x2="435.84" y2="79.5"/>
+    <circle class="cls-3" cx="361.24" cy="79.5" r="75.29"/>
+    <path class="cls-3" d="M319.12,143.85V20.39M402.94,20.39l-41.91,55.63-41.91-55.63M402.94,143.85V20.39M319.12,143.85V20.39M402.94,143.85V20.39"/>
+  </g>
+</svg>
