@@ -15,7 +15,7 @@ export async function initGrassHero(container) {
   const isMobile = window.innerWidth < 768;
   const isLowEnd = isMobile || navigator.hardwareConcurrency <= 4;
   const BLADE_COUNT = isLowEnd ? 35000 : 80000;
-  const FIELD_SIZE = 30;
+  const FIELD_SIZE = 45;
   const SEGMENTS = isLowEnd ? 3 : 4;
 
   // Dark warm beige background
@@ -77,8 +77,8 @@ export async function initGrassHero(container) {
   const noise2Amplitude = uniform(0.2);
   const noise2Frequency = uniform(15);
   const bladeColorVariation = uniform(0.93);
-  const fogStart = uniform(6.5);
-  const fogEnd = uniform(12.0);
+  const fogStart = uniform(8.0);
+  const fogEnd = uniform(16.0);
   const fogIntensity = uniform(1.0);
   const grassDensity = uniform(1.0);
 
@@ -86,8 +86,8 @@ export async function initGrassHero(container) {
   const fogColor = uniform(new THREE.Color(FOG_HEX));
   const groundColor = uniform(new THREE.Color(BG_DARK));
   const backgroundColor = uniform(new THREE.Color(BG_HEX));
-  const groundRadius = uniform(13.8);
-  const groundFalloff = uniform(2.4);
+  const groundRadius = uniform(20.0);
+  const groundFalloff = uniform(3.0);
 
   // VIBRANT grass colors — rich greens with golden tips
   const bladeBaseColor = uniform(new THREE.Color(0.01, 0.04, 0.005));
@@ -115,10 +115,14 @@ export async function initGrassHero(container) {
     const n2 = noise2D(wx.mul(noiseFrequency.mul(noise2Frequency)).add(50), wz.mul(noiseFrequency.mul(noise2Frequency)).add(50));
     const clump = n1.mul(noiseAmplitude).sub(noise2Amplitude).add(n2.mul(noise2Amplitude).mul(2)).max(0);
     blade.w.assign(clump);
-    const dist = sqrt(wx.mul(wx).add(wz.mul(wz)));
+    const absX = wx.abs();
+    const absZ = wz.abs();
     const edgeNoise = noise2D(wx.mul(0.25).add(100), wz.mul(0.25).add(100));
-    const maxR = float(12.0).add(edgeNoise.sub(0.5).mul(6.0));
-    const boundary = float(1).sub(smoothstep(maxR.sub(1.5), maxR, dist));
+    const maxRX = float(20.0).add(edgeNoise.sub(0.5).mul(4.0));
+    const maxRZ = float(10.0).add(edgeNoise.sub(0.5).mul(4.0));
+    const boundaryX = float(1).sub(smoothstep(maxRX.sub(2.0), maxRX, absX));
+    const boundaryZ = float(1).sub(smoothstep(maxRZ.sub(1.5), maxRZ, absZ));
+    const boundary = boundaryX.mul(boundaryZ);
     bladeBound.element(instanceIndex).assign(select(boundary.lessThan(0.05), float(0), boundary));
   })().compute(BLADE_COUNT);
 
