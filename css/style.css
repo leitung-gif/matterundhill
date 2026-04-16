@@ -1665,7 +1665,12 @@ section {
   .hero {
     min-height: 75svh;
     padding-bottom: var(--space-xl);
+    padding-top: 6rem;
     align-items: center;
+  }
+
+  .hero__content {
+    padding-top: var(--space-lg);
   }
 
   .hero__tagline {
