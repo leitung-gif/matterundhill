@@ -18,10 +18,10 @@ export async function initGrassHero(container) {
   const FIELD_SIZE = 45;
   const SEGMENTS = isLowEnd ? 3 : 4;
 
-  // Dark warm beige background
-  const BG_HEX = '#2a2418';
-  const BG_DARK = '#1f1b13';
-  const FOG_HEX = '#231f15';
+  // Warm light beige background
+  const BG_HEX = '#3d3325';
+  const BG_DARK = '#332b1e';
+  const FOG_HEX = '#382f22';
 
   // ── Scene ───────────────────────────────────────────
   const scene = new THREE.Scene();
@@ -31,10 +31,10 @@ export async function initGrassHero(container) {
   skyCanvas.width = 2; skyCanvas.height = 256;
   const skyCtx = skyCanvas.getContext('2d');
   const grad = skyCtx.createLinearGradient(0, 0, 0, 256);
-  grad.addColorStop(0.0, '#1a1610');
-  grad.addColorStop(0.3, '#1f1b13');
-  grad.addColorStop(0.6, '#231f15');
-  grad.addColorStop(1.0, '#2a2418');
+  grad.addColorStop(0.0, '#2e2619');
+  grad.addColorStop(0.3, '#332b1e');
+  grad.addColorStop(0.6, '#382f22');
+  grad.addColorStop(1.0, '#3d3325');
   skyCtx.fillStyle = grad;
   skyCtx.fillRect(0, 0, 2, 256);
   const skyTex = new THREE.CanvasTexture(skyCanvas);
