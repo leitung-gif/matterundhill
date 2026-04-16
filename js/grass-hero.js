@@ -13,10 +13,10 @@ import {
 export async function initGrassHero(container) {
   // ── Config — performance-tuned ──────────────────────
   const isMobile = window.innerWidth < 768;
-  const isLowEnd = isMobile || navigator.hardwareConcurrency <= 4;
-  const BLADE_COUNT = isLowEnd ? 35000 : 80000;
+  const isLowEnd = navigator.hardwareConcurrency <= 4;
+  const BLADE_COUNT = isLowEnd ? 40000 : (isMobile ? 65000 : 80000);
   const FIELD_SIZE = 45;
-  const SEGMENTS = isLowEnd ? 3 : 4;
+  const SEGMENTS = 4;
 
   // Warm light beige background
   const BG_HEX = '#3d3325';
@@ -49,8 +49,8 @@ export async function initGrassHero(container) {
   camera.lookAt(0.5, 1.2, 0.4);
 
   // ── Renderer ────────────────────────────────────────
-  const renderer = new THREE.WebGPURenderer({ antialias: !isLowEnd, alpha: false });
-  const maxDPR = isLowEnd ? 1.0 : Math.min(devicePixelRatio, 1.25);
+  const renderer = new THREE.WebGPURenderer({ antialias: true, alpha: false });
+  const maxDPR = Math.min(devicePixelRatio, 1.5);
   renderer.setPixelRatio(maxDPR);
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
