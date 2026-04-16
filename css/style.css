@@ -455,10 +455,10 @@ p {
 /* === HERO SECTION === */
 .hero {
   position: relative;
-  min-height: 100svh;
+  min-height: 80svh;
   display: flex;
   align-items: flex-end;
-  padding-bottom: var(--space-3xl);
+  padding-bottom: var(--space-2xl);
   overflow: hidden;
   background: var(--green-900);
 }
