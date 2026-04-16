@@ -1655,8 +1655,12 @@ section {
   }
 
   .nav { display: none; }
-  .hamburger { display: flex; }
+  .hamburger { display: flex; padding: 0.5rem; }
   .sticky-cta { display: block; }
+
+  .header__logo img {
+    height: 28px;
+  }
 
   /* Add bottom padding so sticky CTA doesn't overlap content */
   body {
