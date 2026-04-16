@@ -1578,6 +1578,18 @@ section {
 }
 
 /* === RESPONSIVE === */
+
+/* --- Large Desktop (1440+) --- */
+@media (min-width: 1440px) {
+  .hero {
+    min-height: 85svh;
+  }
+  .hero__content {
+    max-width: 1000px;
+  }
+}
+
+/* --- Tablet Landscape (1024px) --- */
 @media (max-width: 1024px) {
   .services__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1585,6 +1597,7 @@ section {
 
   .showcase__gallery {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .testimonials__grid {
@@ -1606,19 +1619,72 @@ section {
   .hero__badge {
     display: none;
   }
+
+  .page-header {
+    padding: 8rem 0 3rem;
+  }
+
+  .service-card__image {
+    height: 220px;
+  }
 }
 
+/* --- Tablet Portrait (768px) --- */
 @media (max-width: 768px) {
   section {
     padding: var(--space-2xl) 0;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
   }
 
   .nav { display: none; }
   .hamburger { display: flex; }
   .sticky-cta { display: block; }
 
+  /* Add bottom padding so sticky CTA doesn't overlap content */
+  body {
+    padding-bottom: 70px;
+  }
+
+  .hero {
+    min-height: 75svh;
+    padding-bottom: var(--space-xl);
+    align-items: center;
+  }
+
+  .hero__tagline {
+    font-size: 0.7rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+  }
+
   .services__grid {
     grid-template-columns: 1fr;
+  }
+
+  .service-card__image {
+    height: 200px;
+  }
+
+  .service-card__body {
+    padding: var(--space-md);
   }
 
   .about__grid {
@@ -1631,8 +1697,18 @@ section {
     aspect-ratio: 16/9;
   }
 
+  .about__image-accent {
+    display: none;
+  }
+
   .showcase__gallery {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .showcase__header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .testimonials__grid {
@@ -1661,15 +1737,76 @@ section {
     gap: 1rem;
   }
 
+  .stat__number {
+    font-size: 2rem;
+  }
+
   .footer__bottom {
     flex-direction: column;
     text-align: center;
+    gap: 0.75rem;
+  }
+
+  .page-header {
+    padding: 7rem 0 2.5rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+
+  /* CTA section */
+  .cta h2 {
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
+
+  /* FAQ */
+  .faq__question {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  /* Marquee */
+  .marquee {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+  }
+
+  /* Process steps */
+  .process__number {
+    font-size: 3rem;
   }
 }
 
+/* --- Small Mobile (480px) --- */
 @media (max-width: 480px) {
+  :root {
+    --gutter: 1rem;
+  }
+
+  .hero {
+    min-height: 70svh;
+  }
+
+  .hero__title {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .hero__tagline {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+  }
+
+  .hero__tagline::before {
+    width: 30px;
+  }
+
   .showcase__gallery {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .showcase__item {
+    aspect-ratio: 4/3;
   }
 
   .about__stats {
@@ -1677,8 +1814,93 @@ section {
     text-align: center;
   }
 
+  .stat__number {
+    font-size: 1.8rem;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .service-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .service-card__image {
+    height: 180px;
+  }
+
+  .page-header {
+    padding: 6rem 0 2rem;
+  }
+
+  .page-header h1 {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+
+  .page-header p {
+    font-size: 0.95rem;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.9rem 1.2rem;
+  }
+
+  /* Testimonials */
+  .testimonial-card {
+    padding: var(--space-md);
+  }
+
+  /* Process */
+  .process__step {
+    padding: var(--space-md);
+  }
+
+  .process__number {
+    font-size: 2.5rem;
+  }
+
+  /* Sticky CTA */
+  .sticky-cta__inner a {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  /* Contact info */
+  .contact__info-card {
+    padding: var(--space-md);
+  }
+
+  /* Legal pages */
+  .container--narrow {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+}
+
+/* --- Very Small (360px) — iPhone SE, small Androids --- */
+@media (max-width: 360px) {
   .hero__title {
-    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    font-size: 1.8rem;
+  }
+
+  .hero__subtitle {
+    font-size: 0.85rem;
+  }
+
+  .footer__bottom p {
+    font-size: 0.75rem;
+  }
+
+  .breadcrumbs {
+    font-size: 0.7rem;
+  }
+
+  .stat__number {
+    font-size: 1.5rem;
   }
 }
 
