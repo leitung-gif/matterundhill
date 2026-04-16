@@ -529,22 +529,17 @@
 
   <!-- Three.js Grass Hero (WebGPU) — deferred for fast page load -->
   <script type="module">
-    // Wait for page to be interactive before loading heavy 3D
-    const startGrass = () => {
+    // Load grass after short delay to not block initial paint
+    setTimeout(() => {
       import('./js/grass-hero.js').then(({ initGrassHero }) => {
         const container = document.getElementById('grassCanvas');
         if (container) {
-          initGrassHero(container).catch(() => {
-            console.log('WebGPU not available — using gradient fallback');
+          initGrassHero(container).catch((err) => {
+            console.log('WebGPU not available — using gradient fallback', err);
           });
         }
-      });
-    };
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(startGrass, { timeout: 1500 });
-    } else {
-      setTimeout(startGrass, 800);
-    }
+      }).catch(err => console.log('Grass module failed:', err));
+    }, 300);
   </script>
   <!-- WhatsApp Widget (Desktop) -->
   <div class="whatsapp-widget">
