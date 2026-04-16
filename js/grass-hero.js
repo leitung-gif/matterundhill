@@ -18,10 +18,10 @@ export async function initGrassHero(container) {
   const FIELD_SIZE = 30;
   const SEGMENTS = isLowEnd ? 3 : 4;
 
-  // Dark brand background
-  const BG_HEX = '#0d1a0b';
-  const BG_DARK = '#081006';
-  const FOG_HEX = '#0a1408';
+  // Dark warm beige background
+  const BG_HEX = '#2a2418';
+  const BG_DARK = '#1f1b13';
+  const FOG_HEX = '#231f15';
 
   // ── Scene ───────────────────────────────────────────
   const scene = new THREE.Scene();
@@ -31,10 +31,10 @@ export async function initGrassHero(container) {
   skyCanvas.width = 2; skyCanvas.height = 256;
   const skyCtx = skyCanvas.getContext('2d');
   const grad = skyCtx.createLinearGradient(0, 0, 0, 256);
-  grad.addColorStop(0.0, '#050a04');
-  grad.addColorStop(0.3, '#081006');
-  grad.addColorStop(0.6, '#0a1408');
-  grad.addColorStop(1.0, '#0d1a0b');
+  grad.addColorStop(0.0, '#1a1610');
+  grad.addColorStop(0.3, '#1f1b13');
+  grad.addColorStop(0.6, '#231f15');
+  grad.addColorStop(1.0, '#2a2418');
   skyCtx.fillStyle = grad;
   skyCtx.fillRect(0, 0, 2, 256);
   const skyTex = new THREE.CanvasTexture(skyCanvas);
@@ -44,9 +44,9 @@ export async function initGrassHero(container) {
   scene.fog = new THREE.FogExp2(FOG_HEX, 0.028);
 
   // ── Camera ──────────────────────────────────────────
-  const camera = new THREE.PerspectiveCamera(38, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(-2.8, 7.2, 19.6);
-  camera.lookAt(0.5, 1.5, 0.4);
+  const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+  camera.position.set(-2.8, 6.5, 17.5);
+  camera.lookAt(0.5, 1.2, 0.4);
 
   // ── Renderer ────────────────────────────────────────
   const renderer = new THREE.WebGPURenderer({ antialias: !isLowEnd, alpha: false });
@@ -257,8 +257,8 @@ export async function initGrassHero(container) {
   renderer.domElement.style.opacity = '1';
 
   // ── Subtle Camera Drift ─────────────────────────────
-  const baseCamPos = { x: -2.8, y: 7.2, z: 19.6 };
-  const lookTarget = new THREE.Vector3(0.5, 1.5, 0.4);
+  const baseCamPos = { x: -2.8, y: 6.5, z: 17.5 };
+  const lookTarget = new THREE.Vector3(0.5, 1.2, 0.4);
   const clock = new THREE.Clock();
 
   // ── Animation Loop ──────────────────────────────────
