@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (heroEl) {
       const stickyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (!entry.isIntersecting && window.scrollY > 600) {
+          if (!entry.isIntersecting && window.scrollY > 200) {
             stickyCta.classList.add('visible');
           } else {
             stickyCta.classList.remove('visible');
