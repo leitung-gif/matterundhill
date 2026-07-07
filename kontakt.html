@@ -7,10 +7,23 @@
   <title>Kontakt - Matter & Hill Garten | Offerte anfragen</title>
   <meta name="description" content="Kontaktieren Sie Matter & Hill Garten f�r eine kostenlose Erstberatung. Tel. 062 511 28 29 oder WhatsApp. Jetzt Offerte anfragen.">
   <meta name="author" content="Matter & Hill Garten GmbH">
-  <link rel="canonical" href="https://www.matterhillgarten.ch/kontakt.html">
+  <link rel="canonical" href="https://www.matterhillgarten.ch/kontakt">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Kontakt - Matter & Hill Garten">
   <meta property="og:description" content="Kostenlose Beratung & Offerte. Tel. 062 511 28 29 oder Kontaktformular.">
+  <meta property="og:url" content="https://www.matterhillgarten.ch/kontakt">
+  <meta property="og:locale" content="de_CH">
+  <meta property="og:site_name" content="Matter & Hill Garten GmbH">
+  <meta property="og:image" content="https://www.matterhillgarten.ch/assets/images/logos/MHG-logo_hbeige.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Kontakt - Matter & Hill Garten GmbH",
+    "description": "Kontaktieren Sie Matter & Hill Garten GmbH für eine kostenlose Offerte.",
+    "url": "https://www.matterhillgarten.ch/kontakt"
+  }
+  </script>
   <meta name="theme-color" content="#244721">
   <link rel="icon" type="image/png" href="assets/images/logos/Icon-dunkel-big.png">
   <link rel="apple-touch-icon" href="assets/images/logos/Icon-dunkel-big.png">
@@ -19,18 +32,18 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="loader" aria-hidden="true"><img src="assets/images/logos/Icon-hell-big.png" alt="" class="loader__logo" width="80" height="80"></div>
+  <div class="loader" aria-hidden="true"><img src="assets/images/logos/Icon-hell-big.webp" alt="" class="loader__logo" width="80" height="80"></div>
   <div class="cursor-spotlight" aria-hidden="true"></div>
 
   <header class="header" role="banner">
     <div class="header__inner">
-      <a href="index.html" class="header__logo"><img src="assets/images/logos/Icon-hell-big.png" alt="Matter & Hill Logo" width="48" height="48"></a>
-      <nav class="nav" role="navigation"><a href="index.html" class="nav__link">Startseite</a><a href="leistungen.html" class="nav__link">Leistungen</a><a href="projekte.html" class="nav__link">Projekte</a><a href="ueber-uns.html" class="nav__link">Über uns</a><a href="kontakt.html" class="nav__link nav__link--active">Kontakt</a><a href="kontakt.html" class="btn btn--ghost nav__cta">Offerte anfragen</a></nav>
+      <a href="index.html" class="header__logo"><img src="assets/images/logos/Icon-hell-big.webp" alt="Matter & Hill Logo" width="48" height="48"></a>
+      <nav class="nav" role="navigation" aria-label="Hauptnavigation"><a href="index.html" class="nav__link">Startseite</a><a href="leistungen.html" class="nav__link">Leistungen</a><a href="projekte.html" class="nav__link">Projekte</a><a href="ueber-uns.html" class="nav__link">Über uns</a><a href="kontakt.html" class="nav__link nav__link--active">Kontakt</a><a href="blog.html" class="nav__link">Blog</a><a href="kontakt.html" class="btn btn--ghost nav__cta">Offerte anfragen</a></nav>
       <button class="hamburger" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
     </div>
   </header>
 
-  <div class="mobile-menu"><a href="index.html" class="mobile-menu__link">Startseite</a><a href="leistungen.html" class="mobile-menu__link">Leistungen</a><a href="projekte.html" class="mobile-menu__link">Projekte</a><a href="ueber-uns.html" class="mobile-menu__link">Über uns</a><a href="kontakt.html" class="mobile-menu__link">Kontakt</a><a href="blog.html" class="mobile-menu__link">Blog</a><div class="mobile-menu__contact"><a href="tel:+41625112829">062 511 28 29</a></div></div>
+  <div class="mobile-menu" role="dialog" aria-label="Mobile Navigation"><a href="index.html" class="mobile-menu__link">Startseite</a><a href="leistungen.html" class="mobile-menu__link">Leistungen</a><a href="projekte.html" class="mobile-menu__link">Projekte</a><a href="ueber-uns.html" class="mobile-menu__link">Über uns</a><a href="kontakt.html" class="mobile-menu__link">Kontakt</a><a href="blog.html" class="mobile-menu__link">Blog</a><div class="mobile-menu__contact"><a href="tel:+41625112829">062 511 28 29</a></div></div>
 
   <main>
     <section class="page-header">
@@ -125,6 +138,10 @@
                 <label for="nachricht">Nachricht *</label>
                 <textarea id="nachricht" name="nachricht" required placeholder="Beschreiben Sie kurz Ihr Anliegen..."></textarea>
               </div>
+              <!-- Honeypot spam protection -->
+              <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                <input type="text" name="website" tabindex="-1" autocomplete="off">
+              </div>
               <button type="submit" class="btn btn--primary" style="width: 100%; justify-content: center;">Nachricht senden <span class="arrow">→</span></button>
             </form>
           </div>
@@ -158,7 +175,7 @@
         <div class="footer__grid">
           <div>
             <a href="index.html" style="margin-bottom: 0.75rem; display: inline-block;">
-              <img src="assets/images/logos/MHG-logo_hbeige.png" alt="Matter &amp; Hill Garten" height="28" style="width:auto;">
+              <img src="assets/images/logos/MHG-logo_hbeige.webp" alt="Matter &amp; Hill Garten" height="28" style="width:auto;">
             </a>
             <p class="footer__brand-text">Ihr professioneller Gartenservice im Aargau. Sauber, effizient und langfristig gedacht.</p>
           </div>
@@ -173,6 +190,7 @@
             <h4 class="footer__heading">Unternehmen</h4>
             <a href="ueber-uns.html" class="footer__link">Über uns</a>
             <a href="projekte.html" class="footer__link">Projekte</a>
+            <a href="blog.html" class="footer__link">Blog</a>
             <a href="kontakt.html" class="footer__link">Kontakt</a>
             <a href="impressum.html" class="footer__link">Impressum</a>
           </div>

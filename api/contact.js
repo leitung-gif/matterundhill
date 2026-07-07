@@ -22,7 +22,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { vorname, nachname, email, telefon, leistung, nachricht } = req.body || {};
+  const { vorname, nachname, email, telefon, leistung, nachricht, website } = req.body || {};
+
+  // Honeypot spam protection — if the hidden field has a value, it's a bot
+  if (website) {
+    return res.status(200).json({ success: true });
+  }
 
   // Validate required fields
   if (!vorname || !nachname || !email || !nachricht) {

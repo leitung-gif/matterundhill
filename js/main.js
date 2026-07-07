@@ -217,14 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = contactForm.querySelector('button[type="submit"]');
       const originalText = btn.textContent;
 
-      // Remove any previous status messages
+      // Remove any previous status/error messages
       const oldMsg = contactForm.querySelector('.form-status-msg');
       if (oldMsg) oldMsg.remove();
-
-      // Loading state
-      btn.textContent = 'Wird gesendet...';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
+      contactForm.querySelectorAll('.form-field-error').forEach(el => el.remove());
+      contactForm.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
       // Collect form data
       const payload = {
@@ -234,7 +231,43 @@ document.addEventListener('DOMContentLoaded', () => {
         telefon: contactForm.querySelector('[name="telefon"]')?.value?.trim() || '',
         leistung: contactForm.querySelector('[name="leistung"]')?.value?.trim() || '',
         nachricht: contactForm.querySelector('[name="nachricht"]')?.value?.trim() || '',
+        website: contactForm.querySelector('[name="website"]')?.value || '',
       };
+
+      // Client-side validation
+      const errors = [];
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function showFieldError(fieldName, message) {
+        const field = contactForm.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+          field.classList.add('input-error');
+          const errEl = document.createElement('span');
+          errEl.className = 'form-field-error';
+          errEl.style.cssText = 'color: #c53030; font-size: 0.85rem; display: block; margin-top: 0.25rem;';
+          errEl.textContent = message;
+          field.parentElement.appendChild(errEl);
+        }
+        errors.push(message);
+      }
+
+      if (!payload.vorname) showFieldError('vorname', 'Bitte geben Sie Ihren Vornamen ein.');
+      if (!payload.nachname) showFieldError('nachname', 'Bitte geben Sie Ihren Nachnamen ein.');
+      if (!payload.email) {
+        showFieldError('email', 'Bitte geben Sie Ihre E-Mail-Adresse ein.');
+      } else if (!emailPattern.test(payload.email)) {
+        showFieldError('email', 'Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+      }
+      if (!payload.nachricht) showFieldError('nachricht', 'Bitte geben Sie eine Nachricht ein.');
+
+      if (errors.length > 0) {
+        return;
+      }
+
+      // Loading state
+      btn.textContent = 'Wird gesendet...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
 
       try {
         const response = await fetch('/api/contact', {
