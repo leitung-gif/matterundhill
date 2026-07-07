@@ -212,24 +212,76 @@ document.addEventListener('DOMContentLoaded', () => {
   // === CONTACT FORM ===
   const contactForm = document.querySelector('#contact-form');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = contactForm.querySelector('button[type="submit"]');
       const originalText = btn.textContent;
+
+      // Remove any previous status messages
+      const oldMsg = contactForm.querySelector('.form-status-msg');
+      if (oldMsg) oldMsg.remove();
+
+      // Loading state
       btn.textContent = 'Wird gesendet...';
       btn.disabled = true;
+      btn.style.opacity = '0.7';
 
-      setTimeout(() => {
-        btn.textContent = '✓ Nachricht gesendet!';
-        btn.style.background = 'var(--green-600)';
-        contactForm.reset();
+      // Collect form data
+      const payload = {
+        vorname: contactForm.querySelector('[name="vorname"]')?.value?.trim() || '',
+        nachname: contactForm.querySelector('[name="nachname"]')?.value?.trim() || '',
+        email: contactForm.querySelector('[name="email"]')?.value?.trim() || '',
+        telefon: contactForm.querySelector('[name="telefon"]')?.value?.trim() || '',
+        leistung: contactForm.querySelector('[name="leistung"]')?.value?.trim() || '',
+        nachricht: contactForm.querySelector('[name="nachricht"]')?.value?.trim() || '',
+      };
 
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '';
-          btn.disabled = false;
-        }, 3000);
-      }, 1200);
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Success
+          btn.textContent = '✓ Nachricht gesendet!';
+          btn.style.background = 'var(--green-600)';
+          btn.style.opacity = '1';
+          contactForm.reset();
+
+          const successMsg = document.createElement('p');
+          successMsg.className = 'form-status-msg';
+          successMsg.style.cssText = 'color: var(--green-600); margin-top: var(--space-sm); font-size: 0.95rem;';
+          successMsg.textContent = 'Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei Ihnen.';
+          btn.parentElement.appendChild(successMsg);
+
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+            successMsg.remove();
+          }, 5000);
+        } else {
+          throw new Error(result.error || 'Unbekannter Fehler');
+        }
+      } catch (err) {
+        // Error
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'form-status-msg';
+        errorMsg.style.cssText = 'color: #c53030; margin-top: var(--space-sm); font-size: 0.95rem;';
+        errorMsg.textContent = err.message || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+        btn.parentElement.appendChild(errorMsg);
+
+        setTimeout(() => errorMsg.remove(), 6000);
+      }
     });
   }
 
