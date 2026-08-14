@@ -57,7 +57,8 @@ export default async function handler(req, res) {
 
   if (!process.env.RESEND_API_KEY) {
     console.error('Contact form misconfigured: RESEND_API_KEY is not set.');
-    return res.status(500).json({ error: 'E-Mail konnte nicht gesendet werden.' });
+    // code nur zur Diagnose — die angezeigte Meldung bleibt fuer Besucher gleich.
+    return res.status(500).json({ error: 'E-Mail konnte nicht gesendet werden.', code: 'missing_api_key' });
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -129,7 +130,11 @@ export default async function handler(req, res) {
       // Vollstaendig loggen — sonst ist in den Vercel-Logs nicht erkennbar,
       // ob es an Domain-Verifizierung, API-Key oder Empfaenger liegt.
       console.error('Resend API error:', JSON.stringify(error), '| from:', FROM, '| to:', TO.join(', '));
-      return res.status(500).json({ error: 'E-Mail konnte nicht gesendet werden.' });
+      return res.status(500).json({
+        error: 'E-Mail konnte nicht gesendet werden.',
+        code: 'send_failed',
+        detail: error?.name || 'unknown',
+      });
     }
 
     return res.status(200).json({ success: true, id: data?.id });
