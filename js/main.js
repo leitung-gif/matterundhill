@@ -276,7 +276,9 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify(payload),
         });
 
-        const result = await response.json();
+        // Bei einem Server-/Proxy-Fehler kommt HTML statt JSON zurueck —
+        // dann darf der Parse-Fehler nicht als Meldung beim Besucher landen.
+        const result = await response.json().catch(() => ({}));
 
         if (response.ok) {
           // Success
@@ -298,7 +300,9 @@ document.addEventListener('DOMContentLoaded', () => {
             successMsg.remove();
           }, 5000);
         } else {
-          throw new Error(result.error || 'Unbekannter Fehler');
+          const apiError = new Error(result.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+          apiError.userMessage = apiError.message;
+          throw apiError;
         }
       } catch (err) {
         // Error
@@ -310,10 +314,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const errorMsg = document.createElement('p');
         errorMsg.className = 'form-status-msg';
         errorMsg.style.cssText = 'color: #c53030; margin-top: var(--space-sm); font-size: 0.95rem;';
-        errorMsg.textContent = err.message || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+        // Nur eigene, verstaendliche Meldungen anzeigen — keine technischen
+        // Browser-Fehler wie "Failed to fetch".
+        errorMsg.textContent = err.userMessage || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+
+        // Fallback anbieten, damit keine Anfrage verloren geht
+        const fallback = document.createElement('span');
+        fallback.style.cssText = 'display: block; margin-top: 0.4rem; color: var(--text-secondary); font-size: 0.9rem;';
+        const mailtoBody = encodeURIComponent(
+          `Name: ${payload.vorname} ${payload.nachname}\nTelefon: ${payload.telefon || '-'}\nLeistung: ${payload.leistung || '-'}\n\n${payload.nachricht}`
+        );
+        fallback.innerHTML =
+          'Sie erreichen uns auch direkt unter <a href="tel:+41625112829">062 511 28 29</a> ' +
+          `oder per <a href="mailto:info@matterhillgarten.ch?subject=Kontaktanfrage&body=${mailtoBody}">E-Mail</a>.`;
+        errorMsg.appendChild(fallback);
+
         btn.parentElement.appendChild(errorMsg);
 
-        setTimeout(() => errorMsg.remove(), 6000);
+        setTimeout(() => errorMsg.remove(), 20000);
       }
     });
   }

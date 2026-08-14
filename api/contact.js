@@ -6,6 +6,15 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+// Absender muss auf einer in Resend verifizierten Domain liegen.
+// onboarding@resend.dev darf ausschliesslich an die eigene Konto-Adresse senden
+// und wird von Resend fuer alle anderen Empfaenger mit 403 abgelehnt.
+const FROM = process.env.CONTACT_FROM || 'Matter & Hill Webformular <kontakt@matterhillgarten.ch>';
+const TO = (process.env.CONTACT_TO || 'info@matterhillgarten.ch')
+  .split(',')
+  .map((address) => address.trim())
+  .filter(Boolean);
+
 export default async function handler(req, res) {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -40,6 +49,11 @@ export default async function handler(req, res) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' });
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    console.error('Contact form misconfigured: RESEND_API_KEY is not set.');
+    return res.status(500).json({ error: 'E-Mail konnte nicht gesendet werden.' });
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -84,17 +98,33 @@ export default async function handler(req, res) {
     </div>
   `;
 
+  const textBody = [
+    'Neue Kontaktanfrage über matterhillgarten.ch',
+    '',
+    `Vorname:   ${vorname}`,
+    `Nachname:  ${nachname}`,
+    `E-Mail:    ${email}`,
+    `Telefon:   ${telefon || '–'}`,
+    `Leistung:  ${leistung || '–'}`,
+    '',
+    'Nachricht:',
+    nachricht,
+  ].join('\n');
+
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Matter & Hill Webformular <onboarding@resend.dev>',
-      to: ['info@matterhillgarten.ch'],
+      from: FROM,
+      to: TO,
       replyTo: email,
       subject: `Kontaktanfrage von ${vorname} ${nachname}`,
       html: htmlBody,
+      text: textBody,
     });
 
     if (error) {
-      console.error('Resend API error:', error);
+      // Vollstaendig loggen — sonst ist in den Vercel-Logs nicht erkennbar,
+      // ob es an Domain-Verifizierung, API-Key oder Empfaenger liegt.
+      console.error('Resend API error:', JSON.stringify(error), '| from:', FROM, '| to:', TO.join(', '));
       return res.status(500).json({ error: 'E-Mail konnte nicht gesendet werden.' });
     }
 
