@@ -6,10 +6,14 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-// Absender muss auf einer in Resend verifizierten Domain liegen.
-// onboarding@resend.dev darf ausschliesslich an die eigene Konto-Adresse senden
-// und wird von Resend fuer alle anderen Empfaenger mit 403 abgelehnt.
-const FROM = process.env.CONTACT_FROM || 'Matter & Hill Webformular <kontakt@matterhillgarten.ch>';
+// onboarding@resend.dev darf nur an die eigene Resend-Konto-Adresse senden.
+// Das Konto laeuft auf info@matterhillgarten.ch, deshalb funktioniert genau
+// diese eine Kombination — Stand 14.08.2026 als "delivered" verifiziert.
+//
+// Sobald eine eigene Domain in Resend verifiziert ist (resend.com/domains),
+// CONTACT_FROM in Vercel setzen, z.B. "Matter & Hill <kontakt@matterhillgarten.ch>".
+// Erst dann kann CONTACT_TO auch auf eine andere Adresse zeigen.
+const FROM = process.env.CONTACT_FROM || 'Matter & Hill Webformular <onboarding@resend.dev>';
 const TO = (process.env.CONTACT_TO || 'info@matterhillgarten.ch')
   .split(',')
   .map((address) => address.trim())
