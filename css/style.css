@@ -1288,7 +1288,7 @@ section {
   font-size: clamp(1.2rem, 2vw, 1.8rem);
   color: var(--beige-100);
   padding: 0 2rem;
-  opacity: 0.6;
+  opacity: 0.88;
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -2126,3 +2126,30 @@ section {
     to { opacity: 1; transform: translateY(0); }
   }
 }
+
+/* === KARTE ERST NACH KLICK === */
+.map-facade {
+  height: 450px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--green-800);
+  color: var(--text-on-dark);
+  text-align: center;
+  padding: 0 1.5rem;
+}
+.map-facade__inner { max-width: 32rem; }
+.map-facade__address {
+  color: var(--beige-100);
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  margin-bottom: 1.5rem;
+}
+.map-facade__btn { margin-bottom: 1.25rem; }
+.map-facade__note {
+  max-width: none;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-on-dark-muted);
+}
+.map-facade__note a { color: var(--beige-100); text-decoration: underline; }

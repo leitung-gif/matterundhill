@@ -1,14 +1,14 @@
 # Matter & Hill Garten GmbH
 
-> Professioneller Gartenservice in der Schweiz – Liegenschaftsverwaltung, Bepflanzungen, Gartenunterhalt und Unterhaltsplanung. Tätig in Aargau und Region.
+> Professioneller Gartenservice in der Schweiz: Liegenschaftsverwaltung, Bepflanzungen, Gartenunterhalt und Unterhaltsplanung. Tätig in Aargau und Region.
 
 ## Über uns
 Matter & Hill Garten GmbH ist ein Schweizer Gartenservice-Unternehmen mit Sitz in Buchs AG (Neumattstrasse 38, 5033 Buchs). Gegründet 2024, bietet das Unternehmen in Aargau und der Region professionelle Gartendienstleistungen für Privatkunden, Liegenschaftsverwaltungen und Unternehmen an. Der Fokus liegt auf nachhaltiger, effizienter Gartenpflege mit langfristigem Mehrwert.
 
-Das Team von Matter & Hill steht für Qualität, Zuverlässigkeit und persönliche Beratung. Jedes Projekt wird individuell geplant und mit höchster Sorgfalt umgesetzt – von der ersten Beratung bis zur regelmässigen Unterhaltspflege.
+Das Team von Matter & Hill steht für Qualität, Zuverlässigkeit und persönliche Beratung. Jedes Projekt wird individuell geplant und mit höchster Sorgfalt umgesetzt, von der ersten Beratung bis zur regelmässigen Unterhaltspflege.
 
 ## Leistungen
-- **Liegenschaftsverwaltung**: Professionelle Gartenpflege für Verwaltungen und Immobilienbesitzer – saisonale Pflege und Grünflächenmanagement.
+- **Liegenschaftsverwaltung**: Professionelle Gartenpflege für Verwaltungen und Immobilienbesitzer: saisonale Pflege und Grünflächenmanagement.
 - **Bepflanzungen & Bau**: Gartengestaltung, Neubepflanzung, Alpenschotterbord, Rasenanlage und Erdarbeiten.
 - **Unterhaltsplanung**: Massgeschneiderte Pflegepläne für eine ganzjährig gepflegte Gartenanlage.
 - **Heckenschnitt & Formschnitt**: Fachgerechter Schnitt von Hecken, Sträuchern und Formgehölzen.
@@ -33,9 +33,9 @@ Das Team von Matter & Hill steht für Qualität, Zuverlässigkeit und persönlic
 
 ## Seiten
 - [Startseite](https://www.matterhillgarten.ch/): Übersicht und Einstieg
-- [Leistungen](https://www.matterhillgarten.ch/leistungen.html): Vollständige Dienstleistungsübersicht
-- [Projekte](https://www.matterhillgarten.ch/projekte.html): Referenzprojekte und Galerie
-- [Über uns](https://www.matterhillgarten.ch/ueber-uns.html): Team und Unternehmensgeschichte
-- [Kontakt](https://www.matterhillgarten.ch/kontakt.html): Beratung und Offertanfrage
-- [Impressum](https://www.matterhillgarten.ch/impressum.html): Rechtliche Informationen
-- [Datenschutz](https://www.matterhillgarten.ch/datenschutz.html): Datenschutzerklärung
+- [Leistungen](https://www.matterhillgarten.ch/leistungen): Vollständige Dienstleistungsübersicht
+- [Projekte](https://www.matterhillgarten.ch/projekte): Referenzprojekte und Galerie
+- [Über uns](https://www.matterhillgarten.ch/ueber-uns): Team und Unternehmensgeschichte
+- [Kontakt](https://www.matterhillgarten.ch/kontakt): Beratung und Offertanfrage
+- [Impressum](https://www.matterhillgarten.ch/impressum): Rechtliche Informationen
+- [Datenschutz](https://www.matterhillgarten.ch/datenschutz): Datenschutzerklärung

@@ -8,12 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // === LOADER ===
   const loader = document.querySelector('.loader');
   if (loader) {
-    window.addEventListener('load', () => {
-      setTimeout(() => loader.classList.add('loaded'), 400);
-    });
-    // Failsafe
-    setTimeout(() => loader.classList.add('loaded'), 2500);
+    // Nicht auf window.load warten: Bilder, Google-Tag und 3D-Rasen kommen
+    // nach. Sobald die Schriften stehen, geht der Vorhang auf, spätestens nach 1.2 s.
+    const hideLoader = () => loader.classList.add('loaded');
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => setTimeout(hideLoader, 150));
+    }
+    setTimeout(hideLoader, 1200);
   }
+
+  // === KARTE ERST NACH KLICK (Datenschutz) ===
+  document.querySelectorAll('.map-facade').forEach((facade) => {
+    const btn = facade.querySelector('.map-facade__btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = facade.dataset.mapSrc;
+      frame.title = facade.dataset.mapTitle || 'Karte';
+      frame.width = '100%';
+      frame.height = '450';
+      frame.style.cssText = 'border:0;display:block;';
+      frame.setAttribute('allowfullscreen', '');
+      frame.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+      facade.replaceWith(frame);
+    });
+  });
 
   // === HEADER SCROLL ===
   const header = document.querySelector('.header');
