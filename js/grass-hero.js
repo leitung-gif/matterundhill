@@ -7,8 +7,165 @@ import * as THREE from 'three/webgpu';
 import {
   Fn, uniform, float, vec3, instancedArray, instanceIndex, uv,
   positionGeometry, positionWorld, sin, cos, pow, smoothstep, mix,
-  sqrt, select, hash, time, deltaTime, PI, mx_noise_float,
+  sqrt, select, hash, time, deltaTime, PI, mx_noise_float, attribute,
 } from 'three/tsl';
+
+// ── Wiesenblumen ──────────────────────────────────────
+// Gänseblümchen, Margeriten und Weissklee, in lockeren Nestern wie in
+// einem echten Rasen. Stufe über data-blumen am Container oder ?blumen=
+// in der Adresse: «aus», «wenig», «mehr».
+const FLOWER_LEVELS = {
+  aus: { nests: 0, perNest: 0, scattered: 0 },
+  wenig: { nests: 7, perNest: 9, scattered: 40 },
+  mehr: { nests: 15, perNest: 18, scattered: 130 },
+};
+
+function flowerLevel(container) {
+  let level = container.dataset.blumen || 'wenig';
+  try {
+    const q = new URLSearchParams(window.location.search).get('blumen');
+    if (q && FLOWER_LEVELS[q]) level = q;
+  } catch (e) { /* ohne Adresse bleibt die Vorgabe */ }
+  return FLOWER_LEVELS[level] ? level : 'wenig';
+}
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Eine Blume als Bausteine: Stiel (Teil 0), Blütenblätter (1), Körbchen (2),
+// Kleeköpfchen (3). Kopf liegt flach in der XZ-Ebene, Radius 1.
+function flowerParts(kind) {
+  const pos = [], part = [], shade = [], idx = [];
+  const add = (x, y, z, p, s) => { pos.push(x, y, z); part.push(p); shade.push(s); return part.length - 1; };
+
+  // Stiel, 4 Segmente, y = 0..1
+  const base = part.length;
+  for (let i = 0; i <= 4; i++) { const t = i / 4; add(-0.5, t, 0, 0, t); add(0.5, t, 0, 0, t); }
+  for (let i = 0; i < 4; i++) { const b = base + i * 2; idx.push(b, b + 1, b + 2, b + 1, b + 3, b + 2); }
+
+  if (kind === 2) {
+    // Klee: kleiner Kern, darum drei Kränze aus feinen Blütchen,
+    // oben aufrecht, unten hängend wie beim echten Kleeköpfchen
+    const core = part.length, seg = 8;
+    add(0, 1.9, 0, 3, 0.2);
+    for (let s = 0; s < seg; s++) {
+      const th = (s / seg) * Math.PI * 2;
+      add(Math.cos(th) * 0.55, 1.0, Math.sin(th) * 0.55, 3, 0.1);
+    }
+    add(0, 0.2, 0, 3, 0.0);
+    for (let s = 0; s < seg; s++) {
+      const n = core + 1 + ((s + 1) % seg), c = core + 1 + s;
+      idx.push(core, n, c, core + seg + 1, c, n);
+    }
+    const tiers = [[1.55, 0.55, 9, 0.35], [1.05, 0.0, 11, 0.0], [0.55, -0.6, 10, 0.25]];
+    for (const [ty, pitch, count, twist] of tiers) {
+      for (let i = 0; i < count; i++) {
+        const th = (i / count) * Math.PI * 2 + twist;
+        const dx = Math.cos(th), dz = Math.sin(th), px = -dz, pz = dx;
+        const len = 0.95, w = 0.16;
+        const tipX = dx * (0.25 + len * Math.cos(pitch)), tipZ = dz * (0.25 + len * Math.cos(pitch));
+        const tipY = ty + len * Math.sin(pitch);
+        const v0 = add(dx * 0.25 + px * w, ty, dz * 0.25 + pz * w, 3, 0.15);
+        const v1 = add(dx * 0.25 - px * w, ty, dz * 0.25 - pz * w, 3, 0.15);
+        const v2 = add(tipX, tipY, tipZ, 3, pitch < 0 ? 0.55 : 1);
+        idx.push(v0, v1, v2);
+      }
+    }
+    return { pos, part, shade, idx };
+  }
+
+  // Gänseblümchen (0) oder Margerite (1)
+  const petals = kind === 1 ? 21 : 26;
+  const inner = kind === 1 ? 0.30 : 0.26;
+  const halfW = kind === 1 ? 0.085 : 0.06;
+  for (let i = 0; i < petals; i++) {
+    const a = (i / petals) * Math.PI * 2 + (i % 2) * 0.05;
+    const len = 1 - (i % 3) * 0.06;
+    const ca = Math.cos(a), sa = Math.sin(a), px = -sa, pz = ca;
+    const p = (r, w, s) => add(ca * r + px * w, 0.06 + r * 0.10, sa * r + pz * w, 1, s);
+    const v0 = p(inner * 0.9, -halfW * 0.6, 0), v1 = p(inner * 0.9, halfW * 0.6, 0);
+    const v2 = p(len * 0.62, -halfW, 0.6), v3 = p(len * 0.62, halfW, 0.6);
+    const v4 = add(ca * len, 0.06 + len * 0.10, sa * len, 1, 1);
+    idx.push(v0, v1, v2, v1, v3, v2, v2, v3, v4);
+  }
+  // Körbchen, leicht gewölbt
+  const c = add(0, 0.16, 0, 2, 1);
+  const ring = 12, first = part.length;
+  for (let i = 0; i < ring; i++) {
+    const a = (i / ring) * Math.PI * 2;
+    add(Math.cos(a) * inner, 0.09, Math.sin(a) * inner, 2, 0);
+  }
+  for (let i = 0; i < ring; i++) idx.push(c, first + ((i + 1) % ring), first + i);
+  return { pos, part, shade, idx };
+}
+
+function buildFlowerGeometry(THREE, level) {
+  const cfg = FLOWER_LEVELS[level];
+  const rnd = mulberry32(level === 'mehr' ? 2027 : 1848);
+  const flowers = [];
+  // Sichtbarer Teil der Wiese vor der Kamera, Rand und Nebel ausgespart
+  const inZone = (x, z) => (x * x) / (15 * 15) + (z * z) / (9.2 * 9.2) < 1 && z > -6.5;
+  const pickKind = (nestKind) => {
+    const r = rnd();
+    if (nestKind !== undefined && r < 0.75) return nestKind;
+    return r < 0.62 ? 0 : (r < 0.84 ? 2 : 1);
+  };
+  const push = (x, z, kind) => { if (inZone(x, z)) flowers.push({ x, z, kind }); };
+
+  for (let n = 0; n < cfg.nests; n++) {
+    // Nester eher rechts und hinten, damit die Schrift links frei bleibt
+    let cx = (rnd() - 0.5) * 26, cz = -4 + rnd() * 13;
+    if (cx < -2 && cz > -1 && rnd() < 0.7) { cx = -cx * 0.8; cz = cz - 4; }
+    const nestKind = rnd() < 0.55 ? 0 : (rnd() < 0.6 ? 2 : 1);
+    const spread = 0.8 + rnd() * 1.6;
+    const count = Math.round(cfg.perNest * (0.6 + rnd() * 0.8));
+    for (let i = 0; i < count; i++) {
+      const a = rnd() * Math.PI * 2, r = spread * Math.sqrt(-2 * Math.log(1 - rnd() * 0.98)) * 0.6;
+      push(cx + Math.cos(a) * r, cz + Math.sin(a) * r, pickKind(nestKind));
+    }
+  }
+  for (let i = 0; i < cfg.scattered; i++) {
+    const x = (rnd() - 0.5) * 30, z = -6.5 + rnd() * 16;
+    if (x < -2 && z > 0 && rnd() < 0.55) continue;
+    push(x, z, pickKind());
+  }
+
+  const kinds = [flowerParts(0), flowerParts(1), flowerParts(2)];
+  const pos = [], part = [], shade = [], i0 = [], i1 = [], idx = [];
+  let offset = 0;
+  for (const f of flowers) {
+    const g = kinds[f.kind];
+    const size = f.kind === 1 ? 0.28 + rnd() * 0.10 : (f.kind === 2 ? 0.08 + rnd() * 0.025 : 0.15 + rnd() * 0.06);
+    const height = f.kind === 1 ? 1.12 + rnd() * 0.25 : (f.kind === 2 ? 0.95 + rnd() * 0.2 : 1.02 + rnd() * 0.25);
+    const rot = rnd() * Math.PI * 2;
+    const tilt = 0.35 + rnd() * 0.45;
+    const tint = rnd();
+    const nv = g.part.length;
+    for (let v = 0; v < nv; v++) {
+      pos.push(g.pos[v * 3], g.pos[v * 3 + 1], g.pos[v * 3 + 2]);
+      part.push(g.part[v]); shade.push(g.shade[v]);
+      i0.push(f.x, f.z, rot, tilt);
+      i1.push(size, height, tint, f.kind);
+    }
+    for (const k of g.idx) idx.push(k + offset);
+    offset += nv;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('aPart', new THREE.Float32BufferAttribute(part, 1));
+  geo.setAttribute('aShade', new THREE.Float32BufferAttribute(shade, 1));
+  geo.setAttribute('aInst0', new THREE.Float32BufferAttribute(i0, 4));
+  geo.setAttribute('aInst1', new THREE.Float32BufferAttribute(i1, 4));
+  geo.setIndex(idx);
+  return { geo, count: flowers.length };
+}
 
 export async function initGrassHero(container) {
   // ── Config — performance-tuned ──────────────────────
@@ -243,6 +400,99 @@ export async function initGrassHero(container) {
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(FIELD_SIZE * 5, FIELD_SIZE * 5), groundMat);
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
+
+  // ── Wiesenblumen ────────────────────────────────────
+  // Köpfe sitzen auf Höhe der Halmspitzen und wiegen im selben Wind.
+  const level = flowerLevel(container);
+  if (level !== 'aus') {
+    const { geo: flowerGeo, count: flowerCount } = buildFlowerGeometry(THREE, level);
+    const petalWhite = uniform(new THREE.Color(0.66, 0.66, 0.60));
+    const petalBase = uniform(new THREE.Color(0.36, 0.38, 0.30));
+    const petalBlush = uniform(new THREE.Color(0.62, 0.40, 0.46));
+    const discYellow = uniform(new THREE.Color(0.78, 0.50, 0.04));
+    const discDeep = uniform(new THREE.Color(0.55, 0.30, 0.02));
+    const cloverTop = uniform(new THREE.Color(0.58, 0.56, 0.46));
+    const cloverBase = uniform(new THREE.Color(0.30, 0.26, 0.16));
+    const redCloverTop = uniform(new THREE.Color(0.50, 0.20, 0.32));
+    const redCloverBase = uniform(new THREE.Color(0.26, 0.09, 0.15));
+    const stemColor = uniform(new THREE.Color(0.05, 0.16, 0.02));
+
+    const aPart = attribute('aPart', 'float');
+    const aShade = attribute('aShade', 'float');
+    const aInst0 = attribute('aInst0', 'vec4');
+    const aInst1 = attribute('aInst1', 'vec4');
+
+    const flowerMat = new THREE.MeshBasicNodeMaterial({ side: THREE.DoubleSide, fog: true });
+
+    flowerMat.positionNode = Fn(() => {
+      const wx = aInst0.x, wz = aInst0.y, rotY = aInst0.z, tilt = aInst0.w;
+      const headSize = aInst1.x, heightFac = aInst1.y;
+      // Halmhöhe an dieser Stelle, gleiche Rechnung wie beim Gras
+      const n1 = noise2D(wx.mul(noiseFrequency), wz.mul(noiseFrequency));
+      const n2 = noise2D(wx.mul(noiseFrequency.mul(noise2Frequency)).add(50), wz.mul(noiseFrequency.mul(noise2Frequency)).add(50));
+      const clump = n1.mul(noiseAmplitude).sub(noise2Amplitude).add(n2.mul(noise2Amplitude).mul(2)).max(0);
+      const edgeNoise = noise2D(wx.mul(0.25).add(100), wz.mul(0.25).add(100));
+      const maxRX = float(20.0).add(edgeNoise.sub(0.5).mul(4.0));
+      const maxRZ = float(10.0).add(edgeNoise.sub(0.5).mul(4.0));
+      const boundary = float(1).sub(smoothstep(maxRX.sub(2.0), maxRX, wx.abs()))
+        .mul(float(1).sub(smoothstep(maxRZ.sub(1.5), maxRZ, wz.abs())));
+      const stemH = float(0.35).add(clump.min(1.1)).add(0.3).mul(bladeHeight).mul(heightFac).mul(boundary);
+      // Wind wie im Compute-Shader, ungeglättet
+      const w1 = sin(wx.mul(0.35).add(wz.mul(0.12)).add(time.mul(windSpeed)));
+      const w2 = sin(wx.mul(0.18).add(wz.mul(0.28)).add(time.mul(windSpeed.mul(0.67))).add(1.7));
+      const lean = hash(wx.mul(13.1).add(wz.mul(7.7)).abs().mul(1000)).sub(0.5).mul(0.5);
+      const windX = w1.add(w2).mul(windAmplitude).add(lean);
+      const windZ = w1.sub(w2).mul(windAmplitude.mul(0.55));
+      const isStem = aPart.lessThan(0.5);
+      const t = select(isStem, positionGeometry.y, float(1));
+      const bendF = pow(t, 1.8).mul(stemH).mul(0.55);
+      const topX = wx.add(windX.mul(bendF));
+      const topZ = wz.add(windZ.mul(bendF));
+      const topY = t.mul(stemH).mul(float(1).sub(windX.mul(windX).mul(0.08)));
+      // Stiel: schmales Band quer zur Blickrichtung
+      const stemPos = vec3(topX.add(positionGeometry.x.mul(0.035)), topY, topZ);
+      // Kopf: drehen, zur Kamera neigen, mit dem Wind leicht kippen
+      const p = positionGeometry;
+      const cR = cos(rotY), sR = sin(rotY);
+      const x1 = p.x.mul(cR).sub(p.z.mul(sR));
+      const z1 = p.x.mul(sR).add(p.z.mul(cR));
+      const tiltW = tilt.add(windZ.mul(0.25));
+      const cT = cos(tiltW), sT = sin(tiltW);
+      const y2 = p.y.mul(cT).sub(z1.mul(sT));
+      const z2 = p.y.mul(sT).add(z1.mul(cT));
+      const roll = windX.mul(0.35);
+      const cW = cos(roll), sW = sin(roll);
+      const x3 = x1.mul(cW).sub(y2.mul(sW));
+      const y3 = x1.mul(sW).add(y2.mul(cW));
+      const headPos = vec3(topX.add(x3.mul(headSize)), topY.add(y3.mul(headSize)), topZ.add(z2.mul(headSize)));
+      return select(isStem, stemPos, headPos);
+    })();
+
+    flowerMat.colorNode = Fn(() => {
+      const tint = aInst1.z, kind = aInst1.w;
+      const petal = mix(petalBase, petalWhite, smoothstep(float(0.0), float(0.7), aShade));
+      const blush = select(kind.lessThan(0.5).and(tint.lessThan(0.3)), smoothstep(float(0.75), float(1.0), aShade).mul(0.55), float(0));
+      const petalCol = mix(petal, petalBlush, blush).mul(float(0.92).add(tint.mul(0.12)));
+      const disc = mix(discDeep, discYellow, aShade);
+      // Weissklee crème, jedes dritte Köpfchen Rotklee
+      const cloverMix = smoothstep(float(0.1), float(0.8), aShade);
+      const clover = select(tint.lessThan(0.33), mix(redCloverBase, redCloverTop, cloverMix), mix(cloverBase, cloverTop, cloverMix));
+      const stem = stemColor.mul(float(0.6).add(aShade.mul(0.6)));
+      const col = select(aPart.lessThan(0.5), stem,
+        select(aPart.lessThan(1.5), petalCol,
+          select(aPart.lessThan(2.5), disc, clover)));
+      const wx = aInst0.x, wz = aInst0.y;
+      const dist = sqrt(wx.mul(wx).add(wz.mul(wz)));
+      const fogFactor = smoothstep(fogStart, fogEnd, dist).mul(fogIntensity);
+      return mix(col, fogColor, fogFactor);
+    })();
+
+    const flowers = new THREE.Mesh(flowerGeo, flowerMat);
+    flowers.frustumCulled = false;
+    flowers.name = `wiesenblumen-${level}-${flowerCount}`;
+    scene.add(flowers);
+    container.dataset.blumenAktiv = `${level}:${flowerCount}`;
+  }
 
   // ── Lighting — warm, brings out green ───────────────
   scene.add(new THREE.AmbientLight(0xffffff, 0.7));
